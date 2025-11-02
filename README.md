@@ -1,2 +1,994 @@
 # Gold-game
 Game
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Idle Miner Cartoon – لعبة التعدين الخامل</title>
+    <style>
+        :root {
+            --primary: #FFD700;
+            --secondary: #C0C0C0;
+            --accent: #FF6B35;
+            --dark: #2C3E50;
+            --light: #ECF0F1;
+            --success: #2ECC71;
+            --telegram: #2AABEE;
+            --bg-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: var(--bg-gradient);
+            color: var(--light);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 500px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        h1 {
+            font-size: 28px;
+            margin-bottom: 5px;
+            color: var(--primary);
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+        }
+        
+        .subtitle {
+            font-size: 16px;
+            color: var(--light);
+            opacity: 0.9;
+        }
+        
+        .stats-bar {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 10px 15px;
+            border-radius: 10px;
+        }
+        
+        .balance, .stars-count {
+            font-weight: bold;
+            font-size: 18px;
+        }
+        
+        .stars-count {
+            color: var(--telegram);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .star-icon {
+            color: #FFCC00;
+        }
+        
+        .mine-card {
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 15px;
+            padding: 15px;
+            margin-bottom: 15px;
+            transition: transform 0.3s, box-shadow 0.3s;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .mine-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        .mine-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .mine-title {
+            font-size: 20px;
+            font-weight: bold;
+        }
+        
+        .gold .mine-title {
+            color: var(--primary);
+        }
+        
+        .silver .mine-title {
+            color: var(--secondary);
+        }
+        
+        .oil .mine-title {
+            color: var(--accent);
+        }
+        
+        .resource-count {
+            font-size: 22px;
+            font-weight: bold;
+        }
+        
+        .mine-description {
+            font-size: 14px;
+            margin-bottom: 15px;
+            opacity: 0.8;
+        }
+        
+        .mine-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+        
+        .mine-controls {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+        }
+        
+        .btn {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 10px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .btn-hire {
+            background: var(--success);
+            color: white;
+        }
+        
+        .btn-upgrade {
+            background: var(--accent);
+            color: white;
+        }
+        
+        .btn-telegram {
+            background: var(--telegram);
+            color: white;
+        }
+        
+        .btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .btn:active {
+            transform: scale(0.98);
+        }
+        
+        .btn:disabled {
+            background: #7f8c8d;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+            opacity: 0.6;
+        }
+        
+        .btn-cost {
+            font-size: 12px;
+            margin-top: 5px;
+        }
+        
+        .actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+            gap: 10px;
+        }
+        
+        .save-btn, .shop-btn {
+            background: var(--dark);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+            flex: 1;
+        }
+        
+        .shop-btn {
+            background: var(--telegram);
+        }
+        
+        .save-btn:hover, .shop-btn:hover {
+            transform: scale(1.05);
+        }
+        
+        .workers-display {
+            display: flex;
+            margin-top: 10px;
+            gap: 5px;
+            flex-wrap: wrap;
+        }
+        
+        .worker {
+            width: 20px;
+            height: 20px;
+            background: var(--primary);
+            border-radius: 50%;
+            animation: bounce 2s infinite;
+        }
+        
+        .worker:nth-child(2) {
+            background: var(--secondary);
+            animation-delay: 0.2s;
+        }
+        
+        .worker:nth-child(3) {
+            background: var(--accent);
+            animation-delay: 0.4s;
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+        
+        .level-badge {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 3px 10px;
+            border-radius: 10px;
+            font-size: 12px;
+            margin-left: 10px;
+        }
+        
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            padding: 20px;
+        }
+        
+        .modal {
+            background: var(--dark);
+            border-radius: 20px;
+            padding: 25px;
+            width: 100%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .modal-title {
+            font-size: 24px;
+            color: var(--telegram);
+        }
+        
+        .close-btn {
+            background: none;
+            border: none;
+            color: var(--light);
+            font-size: 24px;
+            cursor: pointer;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .shop-items {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .shop-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            transition: all 0.3s;
+        }
+        
+        .shop-item:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-3px);
+        }
+        
+        .shop-item-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--telegram);
+            font-size: 24px;
+            color: white;
+        }
+        
+        .shop-item-info {
+            flex: 1;
+        }
+        
+        .shop-item-name {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .shop-item-desc {
+            font-size: 14px;
+            opacity: 0.8;
+        }
+        
+        .shop-item-price {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-weight: bold;
+            color: var(--telegram);
+            margin-top: 5px;
+        }
+        
+        .shop-item-btn {
+            background: var(--telegram);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        
+        .shop-item-btn:hover:not(:disabled) {
+            background: #1e96d3;
+            transform: scale(1.05);
+        }
+        
+        .shop-item-btn:disabled {
+            background: #7f8c8d;
+            cursor: not-allowed;
+            transform: none;
+            opacity: 0.6;
+        }
+        
+        .share-section {
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            text-align: center;
+        }
+        
+        .notification {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--success);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            z-index: 2000;
+            display: none;
+        }
+        
+        @media (max-width: 480px) {
+            .container {
+                padding: 15px;
+            }
+            
+            h1 {
+                font-size: 24px;
+            }
+            
+            .mine-controls {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+                margin-bottom: 5px;
+            }
+            
+            .actions {
+                flex-direction: column;
+            }
+            
+            .shop-item {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Idle Miner Cartoon – لعبة التعدين الخامل</h1>
+            <div class="subtitle">لعبة تعدين خاملة ممتعة بالكاريكاتير</div>
+        </header>
+        
+        <div class="stats-bar">
+            <div class="balance">الرصيد: <span id="balance">100</span> ذهب</div>
+            <div class="stars-count"><span class="star-icon">★</span> <span id="starsCount">0</span> نجمة</div>
+        </div>
+        
+        <main>
+            <!-- منجم الذهب -->
+            <div class="mine-card gold">
+                <div class="mine-header">
+                    <div class="mine-title">منجم الذهب <span class="level-badge">المستوى <span id="goldLevel">1</span></span></div>
+                    <div class="resource-count"><span id="goldAmount">0</span> ذهب</div>
+                </div>
+                <div class="mine-description">مصدر الربح الأساسي</div>
+                <div class="mine-info">
+                    <div>العمال: <span id="goldWorkers">0</span></div>
+                    <div>الإنتاج: <span id="goldProduction">0</span>/ثانية</div>
+                </div>
+                <div class="workers-display" id="goldWorkersDisplay"></div>
+                <div class="mine-controls">
+                    <button class="btn btn-hire" id="hireGold">
+                        توظيف عامل
+                        <span class="btn-cost" id="hireGoldCost">100 ذهب</span>
+                    </button>
+                    <button class="btn btn-upgrade" id="upgradeGold">
+                        ترقية المنجم
+                        <span class="btn-cost" id="upgradeGoldCost">500 ذهب</span>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- منجم الفضة -->
+            <div class="mine-card silver">
+                <div class="mine-header">
+                    <div class="mine-title">منجم الفضة <span class="level-badge">المستوى <span id="silverLevel">1</span></span></div>
+                    <div class="resource-count"><span id="silverAmount">0</span> فضة</div>
+                </div>
+                <div class="mine-description">مصدر ربح متوسط</div>
+                <div class="mine-info">
+                    <div>العمال: <span id="silverWorkers">0</span></div>
+                    <div>الإنتاج: <span id="silverProduction">0</span>/ثانية</div>
+                </div>
+                <div class="workers-display" id="silverWorkersDisplay"></div>
+                <div class="mine-controls">
+                    <button class="btn btn-hire" id="hireSilver">
+                        توظيف عامل
+                        <span class="btn-cost" id="hireSilverCost">150 ذهب</span>
+                    </button>
+                    <button class="btn btn-upgrade" id="upgradeSilver">
+                        ترقية المنجم
+                        <span class="btn-cost" id="upgradeSilverCost">600 ذهب</span>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- منجم النفط -->
+            <div class="mine-card oil">
+                <div class="mine-header">
+                    <div class="mine-title">منجم النفط <span class="level-badge">المستوى <span id="oilLevel">1</span></span></div>
+                    <div class="resource-count"><span id="oilAmount">0</span> نفط</div>
+                </div>
+                <div class="mine-description">مصدر ربح عالي</div>
+                <div class="mine-info">
+                    <div>العمال: <span id="oilWorkers">0</span></div>
+                    <div>الإنتاج: <span id="oilProduction">0</span>/ثانية</div>
+                </div>
+                <div class="workers-display" id="oilWorkersDisplay"></div>
+                <div class="mine-controls">
+                    <button class="btn btn-hire" id="hireOil">
+                        توظيف عامل
+                        <span class="btn-cost" id="hireOilCost">200 ذهب</span>
+                    </button>
+                    <button class="btn btn-upgrade" id="upgradeOil">
+                        ترقية المنجم
+                        <span class="btn-cost" id="upgradeOilCost">800 ذهب</span>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="actions">
+                <button class="save-btn" id="saveBtn">حفظ التقدم</button>
+                <button class="shop-btn" id="shopBtn">متجر النجوم</button>
+            </div>
+        </main>
+    </div>
+
+    <!-- متجر النجوم -->
+    <div class="modal-overlay" id="shopModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title">متجر نجوم تليجرام</h2>
+                <button class="close-btn" id="closeShop">&times;</button>
+            </div>
+            
+            <div class="stars-count" style="justify-content: center; margin-bottom: 20px;">
+                <span class="star-icon">★</span> <span id="modalStarsCount">0</span> نجمة
+            </div>
+            
+            <div class="shop-items">
+                <div class="shop-item">
+                    <div class="shop-item-icon">🚀</div>
+                    <div class="shop-item-info">
+                        <div class="shop-item-name">معزز الإنتاج</div>
+                        <div class="shop-item-desc">يزيد إنتاج جميع المناجم بنسبة 50% لمدة 5 دقائق</div>
+                        <div class="shop-item-price">50 <span class="star-icon">★</span></div>
+                    </div>
+                    <button class="shop-item-btn" id="buyBooster">شراء</button>
+                </div>
+                
+                <div class="shop-item">
+                    <div class="shop-item-icon">👥</div>
+                    <div class="shop-item-info">
+                        <div class="shop-item-name">عمال إضافيين</div>
+                        <div class="shop-item-desc">يحصل كل منجم على 3 عمال إضافيين</div>
+                        <div class="shop-item-price">100 <span class="star-icon">★</span></div>
+                    </div>
+                    <button class="shop-item-btn" id="buyWorkers">شراء</button>
+                </div>
+                
+                <div class="shop-item">
+                    <div class="shop-item-icon">⚡</div>
+                    <div class="shop-item-info">
+                        <div class="shop-item-name">تسريع البيع</div>
+                        <div class="shop-item-desc">يقلل وقت البيع التلقائي إلى النصف لمدة 10 دقائق</div>
+                        <div class="shop-item-price">75 <span class="star-icon">★</span></div>
+                    </div>
+                    <button class="shop-item-btn" id="buySpeed">شراء</button>
+                </div>
+                
+                <div class="shop-item">
+                    <div class="shop-item-icon">💎</div>
+                    <div class="shop-item-info">
+                        <div class="shop-item-name">ترقية فورية</div>
+                        <div class="shop-item-desc">يرفع مستوى جميع المناجم مستوى واحد</div>
+                        <div class="shop-item-price">150 <span class="star-icon">★</span></div>
+                    </div>
+                    <button class="shop-item-btn" id="buyUpgrade">شراء</button>
+                </div>
+            </div>
+            
+            <div class="share-section">
+                <h3 style="margin-bottom: 10px; color: var(--telegram);">شارك اللعبة على تليجرام</h3>
+                <p style="margin-bottom: 15px; font-size: 14px;">احصل على 25 نجمة مجانية عند مشاركة اللعبة!</p>
+                <button class="btn btn-telegram" id="shareTelegram" style="width: 100%;">
+                    مشاركة على تليجرام
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="notification" id="notification"></div>
+
+    <script>
+        // بيانات اللعبة
+        const gameData = {
+            balance: 100,
+            stars: 0,
+            gold: {
+                amount: 0,
+                workers: 0,
+                level: 1,
+                hireCost: 100,
+                upgradeCost: 500,
+                productionRate: 1
+            },
+            silver: {
+                amount: 0,
+                workers: 0,
+                level: 1,
+                hireCost: 150,
+                upgradeCost: 600,
+                productionRate: 1
+            },
+            oil: {
+                amount: 0,
+                workers: 0,
+                level: 1,
+                hireCost: 200,
+                upgradeCost: 800,
+                productionRate: 1
+            },
+            boosters: {
+                production: false,
+                speed: false
+            },
+            shared: false
+        };
+
+        // إظهار الإشعارات
+        function showNotification(message, type = 'success') {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.style.display = 'block';
+            notification.style.background = type === 'success' ? 'var(--success)' : 'var(--accent)';
+            
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 3000);
+        }
+
+        // تحديث واجهة المستخدم
+        function updateUI() {
+            // تحديث الرصيد والنجوم
+            document.getElementById('balance').textContent = Math.floor(gameData.balance);
+            document.getElementById('starsCount').textContent = gameData.stars;
+            document.getElementById('modalStarsCount').textContent = gameData.stars;
+            
+            // تحديث منجم الذهب
+            document.getElementById('goldAmount').textContent = Math.floor(gameData.gold.amount);
+            document.getElementById('goldLevel').textContent = gameData.gold.level;
+            document.getElementById('goldWorkers').textContent = gameData.gold.workers;
+            document.getElementById('goldProduction').textContent = (gameData.gold.workers * gameData.gold.productionRate * gameData.gold.level).toFixed(1);
+            document.getElementById('hireGoldCost').textContent = gameData.gold.hireCost + ' ذهب';
+            document.getElementById('upgradeGoldCost').textContent = gameData.gold.upgradeCost + ' ذهب';
+            updateWorkersDisplay('goldWorkersDisplay', gameData.gold.workers);
+            
+            // تحديث منجم الفضة
+            document.getElementById('silverAmount').textContent = Math.floor(gameData.silver.amount);
+            document.getElementById('silverLevel').textContent = gameData.silver.level;
+            document.getElementById('silverWorkers').textContent = gameData.silver.workers;
+            document.getElementById('silverProduction').textContent = (gameData.silver.workers * gameData.silver.productionRate * gameData.silver.level).toFixed(1);
+            document.getElementById('hireSilverCost').textContent = gameData.silver.hireCost + ' ذهب';
+            document.getElementById('upgradeSilverCost').textContent = gameData.silver.upgradeCost + ' ذهب';
+            updateWorkersDisplay('silverWorkersDisplay', gameData.silver.workers);
+            
+            // تحديث منجم النفط
+            document.getElementById('oilAmount').textContent = Math.floor(gameData.oil.amount);
+            document.getElementById('oilLevel').textContent = gameData.oil.level;
+            document.getElementById('oilWorkers').textContent = gameData.oil.workers;
+            document.getElementById('oilProduction').textContent = (gameData.oil.workers * gameData.oil.productionRate * gameData.oil.level).toFixed(1);
+            document.getElementById('hireOilCost').textContent = gameData.oil.hireCost + ' ذهب';
+            document.getElementById('upgradeOilCost').textContent = gameData.oil.upgradeCost + ' ذهب';
+            updateWorkersDisplay('oilWorkersDisplay', gameData.oil.workers);
+            
+            // تحديث حالة الأزرار للمناجم فقط (إزالة disabled لأزرار المتجر للسماح بالنقر وعرض الرسالة)
+            document.getElementById('hireGold').disabled = gameData.balance < gameData.gold.hireCost;
+            document.getElementById('upgradeGold').disabled = gameData.balance < gameData.gold.upgradeCost;
+            document.getElementById('hireSilver').disabled = gameData.balance < gameData.silver.hireCost;
+            document.getElementById('upgradeSilver').disabled = gameData.balance < gameData.silver.upgradeCost;
+            document.getElementById('hireOil').disabled = gameData.balance < gameData.oil.hireCost;
+            document.getElementById('upgradeOil').disabled = gameData.balance < gameData.oil.upgradeCost;
+        }
+
+        // تحديث عرض العمال
+        function updateWorkersDisplay(elementId, workerCount) {
+            const display = document.getElementById(elementId);
+            display.innerHTML = '';
+            
+            for (let i = 0; i < workerCount && i < 10; i++) {
+                const worker = document.createElement('div');
+                worker.className = 'worker';
+                display.appendChild(worker);
+            }
+            
+            if (workerCount > 10) {
+                const moreWorkers = document.createElement('div');
+                moreWorkers.textContent = `+${workerCount - 10}`;
+                moreWorkers.style.fontSize = '12px';
+                moreWorkers.style.opacity = '0.7';
+                display.appendChild(moreWorkers);
+            }
+            
+            if (workerCount === 0) {
+                const noWorkers = document.createElement('div');
+                noWorkers.textContent = 'لا يوجد عمال';
+                noWorkers.style.fontSize = '12px';
+                noWorkers.style.opacity = '0.7';
+                display.appendChild(noWorkers);
+            }
+        }
+
+        // إنتاج الموارد
+        function produceResources() {
+            let productionMultiplier = 1;
+            
+            if (gameData.boosters.production) {
+                productionMultiplier = 1.5;
+            }
+            
+            if (gameData.gold.workers > 0) {
+                gameData.gold.amount += gameData.gold.workers * gameData.gold.productionRate * gameData.gold.level * productionMultiplier / 10;
+            }
+            
+            if (gameData.silver.workers > 0) {
+                gameData.silver.amount += gameData.silver.workers * gameData.silver.productionRate * gameData.silver.level * productionMultiplier / 10;
+            }
+            
+            if (gameData.oil.workers > 0) {
+                gameData.oil.amount += gameData.oil.workers * gameData.oil.productionRate * gameData.oil.level * productionMultiplier / 10;
+            }
+            
+            updateUI();
+        }
+
+        // بيع الموارد
+        function sellResources() {
+            const goldValue = gameData.gold.amount * 2;
+            const silverValue = gameData.silver.amount * 1.5;
+            const oilValue = gameData.oil.amount * 3;
+            const totalValue = goldValue + silverValue + oilValue;
+            
+            gameData.balance += totalValue;
+            gameData.gold.amount = 0;
+            gameData.silver.amount = 0;
+            gameData.oil.amount = 0;
+            
+            // منح نجمة واحدة فقط إذا تم بيع شيء ما
+            if (totalValue > 0) {
+                gameData.stars += 1;
+                showNotification('تم بيع الموارد وحصلت على نجمة!');
+            }
+            
+            updateUI();
+        }
+
+        // إضافة مستمعي الأحداث للمناجم
+        document.getElementById('hireGold').addEventListener('click', function() {
+            if (gameData.balance >= gameData.gold.hireCost) {
+                gameData.balance -= gameData.gold.hireCost;
+                gameData.gold.workers++;
+                gameData.gold.hireCost = Math.floor(gameData.gold.hireCost * 1.2);
+                showNotification('تم توظيف عامل جديد في منجم الذهب!');
+                updateUI();
+            } else {
+                showNotification('لا يوجد رصيد كافي!', 'error');
+            }
+        });
+
+        document.getElementById('upgradeGold').addEventListener('click', function() {
+            if (gameData.balance >= gameData.gold.upgradeCost) {
+                gameData.balance -= gameData.gold.upgradeCost;
+                gameData.gold.level++;
+                gameData.gold.upgradeCost = Math.floor(gameData.gold.upgradeCost * 1.5);
+                showNotification('تم ترقية منجم الذهب إلى المستوى ' + gameData.gold.level);
+                updateUI();
+            } else {
+                showNotification('لا يوجد رصيد كافي!', 'error');
+            }
+        });
+
+        document.getElementById('hireSilver').addEventListener('click', function() {
+            if (gameData.balance >= gameData.silver.hireCost) {
+                gameData.balance -= gameData.silver.hireCost;
+                gameData.silver.workers++;
+                gameData.silver.hireCost = Math.floor(gameData.silver.hireCost * 1.2);
+                showNotification('تم توظيف عامل جديد في منجم الفضة!');
+                updateUI();
+            } else {
+                showNotification('لا يوجد رصيد كافي!', 'error');
+            }
+        });
+
+        document.getElementById('upgradeSilver').addEventListener('click', function() {
+            if (gameData.balance >= gameData.silver.upgradeCost) {
+                gameData.balance -= gameData.silver.upgradeCost;
+                gameData.silver.level++;
+                gameData.silver.upgradeCost = Math.floor(gameData.silver.upgradeCost * 1.5);
+                showNotification('تم ترقية منجم الفضة إلى المستوى ' + gameData.silver.level);
+                updateUI();
+            } else {
+                showNotification('لا يوجد رصيد كافي!', 'error');
+            }
+        });
+
+        document.getElementById('hireOil').addEventListener('click', function() {
+            if (gameData.balance >= gameData.oil.hireCost) {
+                gameData.balance -= gameData.oil.hireCost;
+                gameData.oil.workers++;
+                gameData.oil.hireCost = Math.floor(gameData.oil.hireCost * 1.2);
+                showNotification('تم توظيف عامل جديد في منجم النفط!');
+                updateUI();
+            } else {
+                showNotification('لا يوجد رصيد كافي!', 'error');
+            }
+        });
+
+        document.getElementById('upgradeOil').addEventListener('click', function() {
+            if (gameData.balance >= gameData.oil.upgradeCost) {
+                gameData.balance -= gameData.oil.upgradeCost;
+                gameData.oil.level++;
+                gameData.oil.upgradeCost = Math.floor(gameData.oil.upgradeCost * 1.5);
+                showNotification('تم ترقية منجم النفط إلى المستوى ' + gameData.oil.level);
+                updateUI();
+            } else {
+                showNotification('لا يوجد رصيد كافي!', 'error');
+            }
+        });
+
+        // فتح وإغلاق المتجر
+        document.getElementById('shopBtn').addEventListener('click', function() {
+            document.getElementById('shopModal').style.display = 'flex';
+        });
+
+        document.getElementById('closeShop').addEventListener('click', function() {
+            document.getElementById('shopModal').style.display = 'none';
+        });
+
+        // إغلاق المتجر بالنقر خارج المحتوى
+        document.getElementById('shopModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                this.style.display = 'none';
+            }
+        });
+
+        // شراء العناصر من المتجر (الآن دائماً يتم التحقق داخل النقر)
+        document.getElementById('buyBooster').addEventListener('click', function() {
+            if (gameData.stars >= 50) {
+                gameData.stars -= 50;
+                gameData.boosters.production = true;
+                
+                // إزالة المعزز بعد 5 دقائق
+                setTimeout(() => {
+                    gameData.boosters.production = false;
+                    showNotification('انتهت مدة معزز الإنتاج!');
+                    updateUI();
+                }, 5 * 60 * 1000);
+                
+                showNotification('تم تفعيل معزز الإنتاج لمدة 5 دقائق!');
+                updateUI();
+            } else {
+                showNotification('ليس لديك نجوم كافية! (تحتاج 50 نجمة)', 'error');
+            }
+        });
+
+        document.getElementById('buyWorkers').addEventListener('click', function() {
+            if (gameData.stars >= 100) {
+                gameData.stars -= 100;
+                gameData.gold.workers += 3;
+                gameData.silver.workers += 3;
+                gameData.oil.workers += 3;
+                
+                showNotification('تم إضافة 3 عمال لكل منجم!');
+                updateUI();
+            } else {
+                showNotification('ليس لديك نجوم كافية! (تحتاج 100 نجمة)', 'error');
+            }
+        });
+
+        document.getElementById('buySpeed').addEventListener('click', function() {
+            if (gameData.stars >= 75) {
+                gameData.stars -= 75;
+                gameData.boosters.speed = true;
+                
+                // إعادة ضبط الفاصل الزمني للبيع
+                clearInterval(sellInterval);
+                sellInterval = setInterval(sellResources, 5000); // نصف الوقت
+                
+                // إعادة الضبط بعد 10 دقائق
+                setTimeout(() => {
+                    gameData.boosters.speed = false;
+                    clearInterval(sellInterval);
+                    sellInterval = setInterval(sellResources, 10000);
+                    showNotification('انتهت مدة معزز السرعة!');
+                    updateUI();
+                }, 10 * 60 * 1000);
+                
+                showNotification('تم تفعيل معزز السرعة لمدة 10 دقائق!');
+                updateUI();
+            } else {
+                showNotification('ليس لديك نجوم كافية! (تحتاج 75 نجمة)', 'error');
+            }
+        });
+
+        document.getElementById('buyUpgrade').addEventListener('click', function() {
+            if (gameData.stars >= 150) {
+                gameData.stars -= 150;
+                gameData.gold.level++;
+                gameData.silver.level++;
+                gameData.oil.level++;
+                
+                showNotification('تم ترقية جميع المناجم مستوى واحد!');
+                updateUI();
+            } else {
+                showNotification('ليس لديك نجوم كافية! (تحتاج 150 نجمة)', 'error');
+            }
+        });
+
+        // مشاركة اللعبة على تليجرام (الآن دائماً يتم التحقق داخل النقر)
+        document.getElementById('shareTelegram').addEventListener('click', function() {
+            if (!gameData.shared) {
+                gameData.stars += 25;
+                gameData.shared = true;
+                
+                // إنشاء رابط مشاركة
+                const gameUrl = window.location.href;
+                const shareText = `جرب هذه اللعبة الممتعة! ${gameUrl}`;
+                
+                // فتح نافذة مشاركة تليجرام
+                const telegramUrl = `https://t.me/share/url?url=${encodeURIComponent(gameUrl)}&text=${encodeURIComponent(shareText)}`;
+                window.open(telegramUrl, '_blank');
+                
+                showNotification('شكراً للمشاركة! حصلت على 25 نجمة مجانية.');
+                updateUI();
+            } else {
+                showNotification('لقد قمت بمشاركة اللعبة مسبقاً!', 'error');
+            }
+        });
+
+        document.getElementById('saveBtn').addEventListener('click', function() {
+            localStorage.setItem('idleMinerSave', JSON.stringify(gameData));
+            showNotification('تم حفظ التقدم!');
+        });
+
+        // تحميل البيانات المحفوظة
+        function loadSave() {
+            const save = localStorage.getItem('idleMinerSave');
+            if (save) {
+                try {
+                    const savedData = JSON.parse(save);
+                    Object.assign(gameData, savedData);
+                    updateUI();
+                } catch (e) {
+                    console.error('خطأ في تحميل البيانات المحفوظة:', e);
+                }
+            }
+        }
+
+        // تهيئة اللعبة
+        loadSave();
+        updateUI();
+
+        // حفظ تلقائي كل 30 ثانية
+        setInterval(() => {
+            localStorage.setItem('idleMinerSave', JSON.stringify(gameData));
+        }, 30000);
+
+        // إنتاج الموارد تلقائياً كل 100 مللي ثانية (10 مرات في الثانية)
+        const productionInterval = setInterval(produceResources, 100);
+
+        // بيع الموارد تلقائياً كل 10 ثواني
+        let sellInterval = setInterval(sellResources, 10000);
+    </script>
+</body>
+</html>
